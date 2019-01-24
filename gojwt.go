@@ -46,11 +46,11 @@ func GenJWT(v interface{}, key string) string {
 	pJson, _ := json.Marshal(v)
 	payload = base64EncodeURL(string(pJson))
 
-	signature = SignJWT(header, payload, key)
+	signature = signJWT(header, payload, key)
 	return header + "." + payload + "." + base64EncodeURL(signature)
 }
 
-func SignJWT(header, payload, key string) string {
+func signJWT(header, payload, key string) string {
 	message := []byte(header + "." + payload)
 	return string(genMac(message, []byte(key)))
 }
