@@ -9,13 +9,13 @@ import (
 	"strings"
 )
 
-func GenMac(message, key []byte) []byte {
+func genMac(message, key []byte) []byte {
 	mac := hmac.New(sha256.New, key)
 	mac.Write(message)
 	return mac.Sum(nil)
 }
 
-func CheckMac(message, messageMac, key []byte) bool {
+func checkMac(message, messageMac, key []byte) bool {
 	mac := hmac.New(sha256.New, key)
 	mac.Write(message)
 	expectedMAC := mac.Sum(nil)
@@ -52,7 +52,7 @@ func GenJWT(v interface{}, key string) string {
 
 func SignJWT(header, payload, key string) string {
 	message := []byte(header + "." + payload)
-	return string(GenMac(message, []byte(key)))
+	return string(genMac(message, []byte(key)))
 }
 
 func VerifyJWT(jwt, key string) bool {
@@ -61,5 +61,5 @@ func VerifyJWT(jwt, key string) bool {
 		return false
 	}
 	message := arr[0] + "." + arr[1]
-	return CheckMac([]byte(message), []byte(base64DecodeURL(arr[2])), []byte(key))
+	return checkMac([]byte(message), []byte(base64DecodeURL(arr[2])), []byte(key))
 }
